@@ -2,12 +2,14 @@ import { connect } from 'cloudflare:sockets';
 
 let listProxy = [];
 let proxyIP;
+let lastFetchTime = 0; // Timestamp untuk menyimpan waktu pengambilan terakhir
 
 async function fetchProxies() {
   try {
     const response = await fetch("https://raw.githubusercontent.com/danprat/dataset/refs/heads/main/proxies.json");
     if (response.ok) {
       listProxy = await response.json();
+      lastFetchTime = Date.now(); // Perbarui waktu pengambilan data terakhir
     } else {
       console.error("Gagal mengambil data proxy:", response.status);
     }
@@ -19,7 +21,9 @@ async function fetchProxies() {
 export default {
   async fetch(request, ctx) {
     try {
-      if (listProxy.length === 0) {
+      // Cek apakah sudah 5 menit sejak pengambilan terakhir
+      const currentTime = Date.now();
+      if (listProxy.length === 0 || (currentTime - lastFetchTime) > 5 * 60 * 1000) {
         await fetchProxies();
       }
 
@@ -47,6 +51,7 @@ export default {
     }
   },
 };
+
 
 async function getAllConfigVless(hostName) {
     try {
