@@ -5,13 +5,12 @@ const listProxy = new Map([
   ['/kr', '52.141.25.42'], // Korea Selatan - Microsoft Azure (Cloud Provider)
   ['/us', '91.186.208.191'], // Amerika Serikat - M247 Ltd
   ['/do', '188.166.255.195'], // Singapura - DigitalOcean
-  ['/dany', '188.166.255.195'], // Singapura - DigitalOcean
   ['/do2', '143.198.213.197'], // Singapura - DigitalOcean
   ['/incapsula', '45.60.186.91'], // Amerika Serikat - Incapsula (Imperva)
   ['/ovh', '15.235.162.49'], // Kanada - OVHcloud
   ['/ore', '138.2.94.123'], // Singapura - Oracle Cloud
   ['/do3', '104.248.145.216'], // Singapura - DigitalOcean
-  // Add the rest of proxies here...
+  // Tambahkan semua proxy lainnya di sini...
 ]);
 
 let cachedConfig = {};
@@ -30,7 +29,13 @@ export default {
     try {
       const url = new URL(request.url);
       const upgradeHeader = request.headers.get('Upgrade');
-      const proxyIP = listProxy.get(url.pathname);
+      const path = url.pathname;
+
+      // Pastikan path terdefinisi dan bukan undefined
+      let proxyIP = null;
+      if (path && listProxy.has(path)) {
+        proxyIP = listProxy.get(path);
+      }
 
       if (upgradeHeader === 'websocket' && proxyIP) {
         return await vlessOverWSHandler(request);
@@ -48,6 +53,7 @@ export default {
     }
   },
 };
+// ========================================================================BATAS EDIT SAMPAI SINI ========================================================================
 
 async function getAllConfigVless(hostName) {
     try {
