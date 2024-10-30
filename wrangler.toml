@@ -1,81 +1,80 @@
-name = "server-sg" # todo
+name = "VLESS-CF-KONTAK" # todo
 #name = "cf-worker-connect-test" # todo
 #main = "test/worker/cf-cdn-cgi-trace2.js"
 #main = "test/worker/worker-connect-test.js"
 main = "_worker.js"
 compatibility_date = "2023-05-26"
 [[routes]]
-pattern = "sg1.bursalokerterbaru.com"
+pattern = "sg.kontak.us.kg"
 custom_domain = true
 [[routes]]
-pattern = "quiz.int.vidio.com.sg1.bursalokerterbaru.com"
+pattern = "quiz.int.vidio.com.sg.kontak.us.kg"
 custom_domain = true
 [[routes]]
-pattern = "quiz.vidio.com.sg1.bursalokerterbaru.com"
+pattern = "quiz.vidio.com.sg.kontak.us.kg"
 custom_domain = true
 [[routes]]
-pattern = "ava.game.naver.com.sg1.bursalokerterbaru.com"
-custom_domain = true
-
-[[routes]]
-pattern = "df.game.naver.com.sg1.bursalokerterbaru.com"
+pattern = "ava.game.naver.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "quiz.vidio.com.sg1.bursalokerterbaru.com"
+pattern = "df.game.naver.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "quiz.int.vidio.com.sg1.bursalokerterbaru.com"
+pattern = "quiz.vidio.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "graph.instagram.com.sg1.bursalokerterbaru.com"
+pattern = "quiz.int.vidio.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "investors.spotify.com.sg1.bursalokerterbaru.com"
+pattern = "graph.instagram.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "cache.netflix.com.sg1.bursalokerterbaru.com"
+pattern = "investors.spotify.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "creativeservices.netflix.com.sg1.bursalokerterbaru.com"
+pattern = "cache.netflix.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "support.zoom.us.sg1.bursalokerterbaru.com"
+pattern = "creativeservices.netflix.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "zaintest.vuclip.com.sg1.bursalokerterbaru.com"
+pattern = "support.zoom.us.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "live.iflix.com.sg1.bursalokerterbaru.com"
+pattern = "zaintest.vuclip.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "io.ruangguru.com.sg1.bursalokerterbaru.com"
+pattern = "live.iflix.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "gw.ruangguru.com.sg1.bursalokerterbaru.com"
-custom_domain = true
-
-
-[[routes]]
-pattern = "data.mt.sg1.bursalokerterbaru.com"
+pattern = "io.ruangguru.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "www.udemy.com.sg1.bursalokerterbaru.com"
+pattern = "gw.ruangguru.com.sg.kontak.us.kg"
 custom_domain = true
 
 [[routes]]
-pattern = "beta.zoom.us.sg1.bursalokerterbaru.com"
+pattern = "data.mt.sg.kontak.us.kg"
+custom_domain = true
+
+[[routes]]
+pattern = "www.udemy.com.sg.kontak.us.kg"
+custom_domain = true
+
+[[routes]]
+pattern = "beta.zoom.us.sg.kontak.us.kg"
 custom_domain = true
 
 
