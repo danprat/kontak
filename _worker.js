@@ -1,56 +1,79 @@
+// Mengimpor fungsi 'connect' dari Cloudflare untuk mengelola koneksi WebSocket
 import { connect } from 'cloudflare:sockets';
 
-let listProxy = [];
-let proxyIP;
+// Variabel global untuk menyimpan daftar proxy dan waktu pengambilan terakhir
+let listProxy = [];  // Menyimpan daftar proxy yang diperbarui secara berkala
 let lastFetchTime = 0; // Timestamp untuk menyimpan waktu pengambilan terakhir
 
+// Fungsi untuk mengambil daftar proxy dari sumber eksternal
 async function fetchProxies() {
   try {
+    // Meminta data JSON dari URL eksternal yang berisi daftar proxy
     const response = await fetch("https://raw.githubusercontent.com/danprat/dataset/refs/heads/main/proxies.json");
     if (response.ok) {
+      // Jika pengambilan data berhasil, parsing data JSON dan simpan di listProxy
       listProxy = await response.json();
       lastFetchTime = Date.now(); // Perbarui waktu pengambilan data terakhir
+      console.log("Data proxy berhasil diperbarui:", listProxy);
     } else {
+      // Jika gagal mengambil data, cetak pesan error ke konsol
       console.error("Gagal mengambil data proxy:", response.status);
     }
   } catch (error) {
+    // Tangani kesalahan lain, seperti jaringan putus atau URL tidak ditemukan
     console.error("Terjadi kesalahan saat mengambil data proxy:", error);
   }
 }
 
+// Fungsi polling yang dijalankan secara berkala di background untuk memperbarui daftar proxy
+function startBackgroundPolling() {
+  // Panggil fungsi fetchProxies pertama kali saat aplikasi dimulai
+  fetchProxies();
+
+  // Atur agar fetchProxies dipanggil ulang setiap 5 menit (300.000 ms)
+  setInterval(fetchProxies, 5 * 60 * 1000);
+}
+
+// Mulai polling di background untuk memperbarui proxy secara otomatis
+startBackgroundPolling();
+
+// Fungsi utama yang menangani permintaan HTTP
 export default {
   async fetch(request, ctx) {
     try {
-      // Cek apakah sudah 5 menit sejak pengambilan terakhir
-      const currentTime = Date.now();
-      if (listProxy.length === 0 || (currentTime - lastFetchTime) > 5 * 60 * 1000) {
-        await fetchProxies();
-      }
-
+      // Parsing URL dari permintaan untuk mendapatkan informasi path dan header
       const url = new URL(request.url);
-      const upgradeHeader = request.headers.get('Upgrade');
+      const upgradeHeader = request.headers.get('Upgrade'); // Cek apakah permintaan WebSocket
+      let proxyIP = null; // Variabel sementara untuk menyimpan IP proxy yang cocok
 
+      // Cari IP proxy yang cocok berdasarkan path permintaan
       for (const entry of listProxy) {
+        // Jika path dalam URL cocok dengan entri path di listProxy, gunakan IP proxy tersebut
         if (url.pathname === entry.path) {
           proxyIP = entry.proxy;
-          break;
+          break; // Hentikan pencarian setelah menemukan IP proxy yang cocok
         }
       }
 
+      // Jika permintaan adalah WebSocket dan proxy IP ditemukan, gunakan handler WebSocket
       if (upgradeHeader === 'websocket' && proxyIP) {
+        // Fungsi ini akan menangani permintaan WebSocket melalui proxy yang ditemukan
         return await vlessOverWSHandler(request);
       }
 
+      // Jika bukan WebSocket atau tidak ada IP proxy yang cocok, kembalikan konfigurasi VLESS
       const allConfig = await getAllConfigVless(request.headers.get('Host'));
       return new Response(allConfig, {
         status: 200,
-        headers: { "Content-Type": "text/html;charset=utf-8" },
+        headers: { "Content-Type": "text/html;charset=utf-8" }, // Mengatur header respons
       });
     } catch (err) {
+      // Jika terjadi kesalahan, kembalikan respons dengan status 500 dan pesan error
       return new Response(err.toString(), { status: 500 });
     }
   },
 };
+
 
 
 async function getAllConfigVless(hostName) {
