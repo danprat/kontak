@@ -1,4 +1,4 @@
-name = "VLESS-CF-KONTAK" # todo
+name = "vless-kontak" # todo
 #name = "cf-worker-connect-test" # todo
 main = "_worker.js"
 compatibility_date = "2023-05-26"
