@@ -1,16 +1,15 @@
 import { connect } from 'cloudflare:sockets';
 
 const listProxy = new Map([
-  ['/akamai', '172.232.238.169'], // Akamai (Global CDN, tidak spesifik negara)
-  ['/kr', '52.141.25.42'], // Korea Selatan - Microsoft Azure (Cloud Provider)
-  ['/us', '91.186.208.191'], // Amerika Serikat - M247 Ltd
-  ['/do', '188.166.255.195'], // Singapura - DigitalOcean
-  ['/dany', '188.166.255.195'], // Singapura - DigitalOcean
-  ['/do2', '143.198.213.197'], // Singapura - DigitalOcean
-  ['/incapsula', '45.60.186.91'], // Amerika Serikat - Incapsula (Imperva)
-  ['/ovh', '15.235.162.49'], // Kanada - OVHcloud
-  ['/ore', '138.2.94.123'], // Singapura - Oracle Cloud
-  ['/do3', '104.248.145.216'], // Singapura - DigitalOcean
+  ['/akamai', '172.232.238.169'],
+  ['/kr', '52.141.25.42'],
+  ['/us', '91.186.208.191'],
+  ['/dany', '188.166.255.195'],
+  ['/do2', '143.198.213.197'],
+  ['/incapsula', '45.60.186.91'],
+  ['/ovh', '15.235.162.49'],
+  ['/ore', '138.2.94.123'],
+  ['/do3', '104.248.145.216'],
   // Tambahkan semua proxy lainnya di sini...
 ]);
 
@@ -28,13 +27,17 @@ async function getCachedConfig(host) {
 export default {
   async fetch(request, ctx) {
     try {
-      const url = new URL(request.url);
-      const upgradeHeader = request.headers.get('Upgrade');
-      const path = url.pathname;
+      // Debugging: cek URL dan pathname
+      console.log('Request URL:', request.url);
 
-      // Pastikan path terdefinisi dan bukan undefined
+      const url = new URL(request.url);
+      const path = url.pathname || '/'; // Gunakan '/' jika pathname tidak ada
+      console.log('Path:', path); // Debugging: cek apakah path berhasil terambil
+
+      const upgradeHeader = request.headers.get('Upgrade');
       let proxyIP = null;
-      if (path && listProxy.has(path)) {
+
+      if (listProxy.has(path)) {
         proxyIP = listProxy.get(path);
       }
 
@@ -50,10 +53,12 @@ export default {
         headers: { "Content-Type": "text/html;charset=utf-8" },
       });
     } catch (err) {
+      console.error('Error:', err); // Debugging: log error jika terjadi
       return new Response(err.toString(), { status: 500 });
     }
   },
 };
+
 // ========================================================================BATAS EDIT SAMPAI SINI ========================================================================
 
 async function getAllConfigVless(hostName) {
