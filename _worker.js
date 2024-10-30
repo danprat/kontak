@@ -1,63 +1,73 @@
 import { connect } from 'cloudflare:sockets';
-
-const listProxy = new Map([
-  ['/akamai', '172.232.238.169'],
-  ['/kr', '52.141.25.42'],
-  ['/us', '91.186.208.191'],
-  ['/dany', '188.166.255.195'],
-  ['/do2', '143.198.213.197'],
-  ['/incapsula', '45.60.186.91'],
-  ['/ovh', '15.235.162.49'],
-  ['/ore', '138.2.94.123'],
-  ['/do3', '104.248.145.216'],
-  // Tambahkan semua proxy lainnya di sini...
-]);
-
-let cachedConfig = {};
-
-async function getCachedConfig(host) {
-  if (cachedConfig[host]) {
-    return cachedConfig[host];
-  }
-  const config = await getAllConfigVless(host);
-  cachedConfig[host] = config;
-  return config;
-}
-
+const listProxy = [
+	{ path: '/akamai', proxy: '172.232.238.169' }, // Akamai (Global CDN, tidak spesifik negara)
+	{ path: '/kr', proxy: '52.141.25.42'}, // Korea Selatan - Microsoft Azure (Cloud Provider)
+	{ path: '/us', proxy: '91.186.208.191'}, // Amerika Serikat - M247 Ltd
+	{ path: '/do', proxy: '188.166.255.195' }, // Singapura - DigitalOcean
+	{ path: '/do2', proxy: '143.198.213.197' }, // Singapura - DigitalOcean
+	{ path: '/incapsula', proxy: '45.60.186.91' }, // Amerika Serikat - Incapsula (Imperva)
+	{ path: '/ovh', proxy: '15.235.162.49' }, // Kanada - OVHcloud
+	{ path: '/ore', proxy: '138.2.94.123' }, // Singapura - Oracle Cloud
+	{ path: '/do3', proxy: '104.248.145.216' }, // Singapura - DigitalOcean
+	{ path: "/akamai1", proxy: "172.232.239.219:587" }, // Akamai 🇮🇩
+	{ path: "/akamai2", proxy: "172.232.252.119:587" }, // Akamai 🇮🇩
+	{ path: "/akamai3", proxy: "172.232.249.190:587" }, // Akamai 🇮🇩
+	{ path: "/akamai4", proxy: "172.232.238.103:587" }, // Akamai 🇮🇩
+	{ path: "/akamai5", proxy: "172.232.239.151:587" }, // Akamai 🇮🇩
+	{ path: "/akamai6", proxy: "172.232.252.106:587" }, // Akamai 🇮🇩
+	{ path: "/akamai7", proxy: "172.232.239.24:587" },  // Akamai 🇮🇩
+	{ path: "/ucloud", proxy: "165.154.48.233:587" },   // Ucloud Information Technology Hk 🇮🇩
+	{ path: "/akamai8", proxy: "172.232.239.10:587" },  // Akamai 🇮🇩
+	{ path: "/akamai9", proxy: "172.232.239.56:587" },  // Akamai 🇮🇩
+	{ path: "/cloudteknologinusantara1", proxy: "103.133.223.50:2096" }, // Cloud Teknologi Nusantara 🇮🇩
+	{ path: "/cloudteknologinusantara2", proxy: "103.133.223.51:2096" }, // Cloud Teknologi Nusantara 🇮🇩
+	{ path: "/akamai10", proxy: "172.232.238.169:443" }, // Akamai 🇮🇩
+	{ path: "/akamai11", proxy: "172.232.252.101:587" }, // Akamai 🇮🇩
+	{ path: "/akamai12", proxy: "172.232.234.10:587" }, // Akamai 🇮🇩
+	{ path: "/akamai13", proxy: "172.232.239.235:587" }, // Akamai 🇮🇩
+	{ path: "/akamai14", proxy: "172.232.252.35:587" },  // Akamai 🇮🇩
+	{ path: "/akamai15", proxy: "172.232.234.189:587" }, // Akamai 🇮🇩
+	{ path: "/akamai16", proxy: "172.232.234.119:587" }, // Akamai 🇮🇩
+	{ path: "/akamai17", proxy: "172.232.238.169:587" }, // Akamai 🇮🇩
+	{ path: "/tencent", proxy: "43.133.145.156:53136" }, // Tencent cloud computing 🇮🇩
+	{ path: "/alibaba1", proxy: "8.215.23.33:587" },    // Alibaba 🇮🇩
+	{ path: "/alibaba2", proxy: "8.215.23.109:587" },   // Alibaba 🇮🇩
+	{ path: "/cloudteknologinusantara3", proxy: "103.133.223.52:2096" }, // Cloud Teknologi Nusantara 🇮🇩
+	{ path: "/akamai18", proxy: "172.232.252.108:587" }, // Akamai 🇮🇩
+	{ path: "/akamai19", proxy: "172.232.234.33:587" },  // Akamai 🇮🇩
+	{ path: "/ptbeonmultimedia", proxy: "101.50.0.114:8443" }, // PT Beon Multimedia 🇮🇩
+	{ path: "/rumahweb", proxy: "203.194.112.119:2053" }, // Rumahweb 🇮🇩
+	{ path: "/amazon", proxy: "43.218.79.114:2053" },    // AMAZONCOM INC 🇮🇩
+	{ path: "/google1", proxy: "35.219.50.99:443" },     // Google LLC 🇮🇩
+	{ path: '/dany', proxy: '188.166.255.195' }, // Singapura - DigitalOcean
+	{ path: "/google2", proxy: "35.219.15.90:443" },     // Google LLC 🇮🇩  
+];
+let proxyIP;
 export default {
-  async fetch(request, ctx) {
-    try {
-      // Debugging: cek URL dan pathname
-      console.log('Request URL:', request.url);
-
-      const url = new URL(request.url);
-      const path = url.pathname || '/'; // Gunakan '/' jika pathname tidak ada
-      console.log('Path:', path); // Debugging: cek apakah path berhasil terambil
-
-      const upgradeHeader = request.headers.get('Upgrade');
-      let proxyIP = null;
-
-      if (listProxy.has(path)) {
-        proxyIP = listProxy.get(path);
+    async fetch(request, ctx) {
+      try {
+        proxyIP = proxyIP;
+        const url = new URL(request.url);
+        const upgradeHeader = request.headers.get('Upgrade');
+        for (const entry of listProxy) {
+          if (url.pathname === entry.path) {
+            proxyIP = entry.proxy;
+            break;
+          }
+        }
+        if (upgradeHeader === 'websocket' && proxyIP) {
+          return await vlessOverWSHandler(request);
+        }
+        const allConfig = await getAllConfigVless(request.headers.get('Host'));
+        return new Response(allConfig, {
+          status: 200,
+          headers: { "Content-Type": "text/html;charset=utf-8" },
+        });
+      } catch (err) {
+        return new Response(err.toString(), { status: 500 });
       }
-
-      if (upgradeHeader === 'websocket' && proxyIP) {
-        return await vlessOverWSHandler(request);
-      }
-
-      const host = request.headers.get('Host');
-      const allConfig = await getCachedConfig(host);
-
-      return new Response(allConfig, {
-        status: 200,
-        headers: { "Content-Type": "text/html;charset=utf-8" },
-      });
-    } catch (err) {
-      console.error('Error:', err); // Debugging: log error jika terjadi
-      return new Response(err.toString(), { status: 500 });
-    }
-  },
-};
+    },
+  };
 
 // ========================================================================BATAS EDIT SAMPAI SINI ========================================================================
 
