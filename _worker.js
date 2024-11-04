@@ -38,9 +38,9 @@ const listProxy = [
 	{ path: "/ptbeonmultimedia", proxy: "101.50.0.114:8443" }, // PT Beon Multimedia 🇮🇩
 	{ path: "/rumahweb", proxy: "203.194.112.119:2053" }, // Rumahweb 🇮🇩
 	{ path: "/amazon", proxy: "43.218.79.114:2053" },    // AMAZONCOM INC 🇮🇩
-	{ path: "/google1", proxy: "35.219.50.99:443" },     // Google LLC 🇮🇩
+	{ path: "/google1", proxy: "35.219.50.99" },     // Google LLC 🇮🇩
 	{ path: '/dany', proxy: '188.166.255.195' }, // Singapura - DigitalOcean
-	{ path: "/google2", proxy: "35.219.15.90:443" },     // Google LLC 🇮🇩  
+	{ path: "/google2", proxy: "35.219.15.90" },     // Google LLC 🇮🇩  
 ];
 let proxyIP;
 export default {
