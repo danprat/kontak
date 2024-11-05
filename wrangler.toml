@@ -3,11 +3,6 @@ name = "vless-kontak" # todo
 main = "_worker.js"
 compatibility_date = "2023-05-26"
 
-# KV Namespace binding
-kv_namespaces = [
-  { binding = "PROXY_LIST", id = "78ea13b24a75421d912a35945abb9904" }
-]
-
 [[routes]]
 pattern = "sg.kontak.us.kg"
 custom_domain = true
