@@ -1,43 +1,11 @@
 import { connect } from 'cloudflare:sockets';
 const listProxy = [
-	{ path: '/akamai', proxy: '172.232.238.169' }, // Akamai (Global CDN, tidak spesifik negara)
-	{ path: '/kr', proxy: '52.141.25.42'}, // Korea Selatan - Microsoft Azure (Cloud Provider)
-	{ path: '/us', proxy: '91.186.208.191'}, // Amerika Serikat - M247 Ltd
 	{ path: '/do', proxy: '188.166.255.195' }, // Singapura - DigitalOcean
 	{ path: '/do2', proxy: '143.198.213.197' }, // Singapura - DigitalOcean
 	{ path: '/incapsula', proxy: '45.60.186.91' }, // Amerika Serikat - Incapsula (Imperva)
 	{ path: '/ovh', proxy: '15.235.162.49' }, // Kanada - OVHcloud
 	{ path: '/ore', proxy: '138.2.94.123' }, // Singapura - Oracle Cloud
 	{ path: '/do3', proxy: '104.248.145.216' }, // Singapura - DigitalOcean
-	{ path: "/akamai1", proxy: "172.232.239.219:587" }, // Akamai 🇮🇩
-	{ path: "/akamai2", proxy: "172.232.252.119:587" }, // Akamai 🇮🇩
-	{ path: "/akamai3", proxy: "172.232.249.190:587" }, // Akamai 🇮🇩
-	{ path: "/akamai4", proxy: "172.232.238.103:587" }, // Akamai 🇮🇩
-	{ path: "/akamai5", proxy: "172.232.239.151:587" }, // Akamai 🇮🇩
-	{ path: "/akamai6", proxy: "172.232.252.106:587" }, // Akamai 🇮🇩
-	{ path: "/akamai7", proxy: "172.232.239.24:587" },  // Akamai 🇮🇩
-	{ path: "/ucloud", proxy: "165.154.48.233:587" },   // Ucloud Information Technology Hk 🇮🇩
-	{ path: "/akamai8", proxy: "172.232.239.10:587" },  // Akamai 🇮🇩
-	{ path: "/akamai9", proxy: "172.232.239.56:587" },  // Akamai 🇮🇩
-	{ path: "/cloudteknologinusantara1", proxy: "103.133.223.50:2096" }, // Cloud Teknologi Nusantara 🇮🇩
-	{ path: "/cloudteknologinusantara2", proxy: "103.133.223.51:2096" }, // Cloud Teknologi Nusantara 🇮🇩
-	{ path: "/akamai10", proxy: "172.232.238.169" }, // Akamai 🇮🇩
-	{ path: "/akamai11", proxy: "172.232.252.101:587" }, // Akamai 🇮🇩
-	{ path: "/akamai12", proxy: "172.232.234.10:587" }, // Akamai 🇮🇩
-	{ path: "/akamai13", proxy: "172.232.239.235:587" }, // Akamai 🇮🇩
-	{ path: "/akamai14", proxy: "172.232.252.35:587" },  // Akamai 🇮🇩
-	{ path: "/akamai15", proxy: "172.232.234.189:587" }, // Akamai 🇮🇩
-	{ path: "/akamai16", proxy: "172.232.234.119:587" }, // Akamai 🇮🇩
-	{ path: "/akamai17", proxy: "172.232.238.169:587" }, // Akamai 🇮🇩
-	{ path: "/tencent", proxy: "43.133.145.156:53136" }, // Tencent cloud computing 🇮🇩
-	{ path: "/alibaba1", proxy: "8.215.23.33:587" },    // Alibaba 🇮🇩
-	{ path: "/alibaba2", proxy: "8.215.23.109:587" },   // Alibaba 🇮🇩
-	{ path: "/cloudteknologinusantara3", proxy: "103.133.223.52:2096" }, // Cloud Teknologi Nusantara 🇮🇩
-	{ path: "/akamai18", proxy: "172.232.252.108:587" }, // Akamai 🇮🇩
-	{ path: "/akamai19", proxy: "172.232.234.33:587" },  // Akamai 🇮🇩
-	{ path: "/ptbeonmultimedia", proxy: "101.50.0.114:8443" }, // PT Beon Multimedia 🇮🇩
-	{ path: "/rumahweb", proxy: "203.194.112.119:2053" }, // Rumahweb 🇮🇩
-	{ path: "/amazon", proxy: "43.218.79.114:2053" },    // AMAZONCOM INC 🇮🇩
 	{ path: "/google1", proxy: "35.219.50.99" },     // Google LLC 🇮🇩
 	{ path: '/dany', proxy: '188.166.255.195' }, // Singapura - DigitalOcean
 	{ path: "/google2", proxy: "35.219.15.90" },     // Google LLC 🇮🇩  
