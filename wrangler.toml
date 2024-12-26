@@ -71,10 +71,6 @@ custom_domain = true
 pattern = "beta.zoom.us.sg.kontak.us.kg"
 custom_domain = true
 
-[[routes]]
-pattern = "zoomgov.sg.kontak.us.kg"
-custom_domain = true
-
 [vars]
 UUID = "e1550644-714b-444e-9702-d6cf02800c4f"
 # PROXYIP = "1.2.3.4"
